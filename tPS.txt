@@ -1,0 +1,45 @@
+Texture2D tex : register(t0);
+SamplerState samplerLinear : register(s0);
+
+cbuffer LightBuffer : register(b1)
+{
+    float4 ambientColor;
+    float4 diffuseColor;
+    float3 lightDirection;
+    float  padding; 
+};
+
+struct PS_INPUT
+{
+    float4 Pos : SV_POSITION;
+    float3 Normal : NORMAL;
+    float3 Tangent : TANGENT;  // 如果暂时用不到Tangent，可以先不使用
+    float2 TexCoords : TEXCOORD;
+};
+
+float4 PS(PS_INPUT input) : SV_Target0
+{
+    // 采样纹理颜色
+    float4 baseColor = tex.Sample(samplerLinear, input.TexCoords);
+
+    // 对于透明度测试，如果透明度过低则丢弃像素
+    if (baseColor.a < 0.5)
+    {
+        discard;
+    }
+
+    // 法线归一化，确保法线方向正确
+    float3 norm = normalize(input.Normal);
+
+    // 计算漫反射强度：N·L
+    float NdotL = saturate(dot(norm, -lightDirection));
+    
+    // 简单的Lambert光照计算：环境光 + 漫反射光
+    float4 lighting = ambientColor + diffuseColor * NdotL;
+
+    // 将纹理颜色与光照颜色混合
+    float4 finalColor = lighting * baseColor;
+    finalColor.a = 1.0f; // 保持最终输出的alpha为1.0
+
+    return finalColor;
+}
