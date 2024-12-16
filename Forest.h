@@ -10,7 +10,6 @@ std::vector<Vec3> loadTreePositions(const std::string& filename) {
     std::ifstream file(filename);
 
     if (!file.is_open()) {
-        std::cerr << "无法读取文件 " << filename << std::endl;
         return positions;
     }
 
@@ -49,7 +48,6 @@ bool isValidPosition(const TreePosition& newPos, const std::set<TreePosition>& t
 void generateForestFile(const std::string& filename, int treeCount, int gridSize, float minDistance, int exclusionRange) {
     std::ofstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "无法打开文件 " << filename << std::endl;
         return;
     }
 

@@ -225,7 +225,7 @@ public:
         camera.moveBackward(keys['S'] ? 10.0f : 0.0f, dt);
         camera.moveRight(keys['D'] ? 10.0f : 0.0f, dt);
         camera.moveLeft(keys['A'] ? 10.0f : 0.0f, dt);
-        camera.moveUp(GetAsyncKeyState(VK_SPACE) & 0x8000 ? 10.0f : 0.0f, dt);  // 检测空格键是否按下
+        camera.moveUp(GetAsyncKeyState(VK_SPACE) & 0x8000 ? 10.0f : 0.0f, dt);  
 
 
         vp = camera.viewMatrix * camera.projectionMatrix;
