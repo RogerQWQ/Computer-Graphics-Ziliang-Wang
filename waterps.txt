@@ -8,10 +8,8 @@ struct PS_INPUT {
 };
 
 float4 PS(PS_INPUT input) : SV_Target0 {
-	// 采样纹理
+	
 	float4 baseColor = tex.Sample(samplerLinear, input.TexCoords);
-
-	// 确保透明度
 	baseColor.a = 1.0f;
 	return baseColor;
 }

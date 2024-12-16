@@ -11,10 +11,10 @@ struct PS_INPUT
 
 float4 PS(PS_INPUT input) : SV_Target
 {
-	// 从纹理采样颜色
+	
 	float4 color = tex.Sample(samp, input.TexCoords);
 
-	// 透明度剪裁，避免渲染全透明像素
+
 	if (color.a < 0.1f)
 		discard;
 

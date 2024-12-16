@@ -5,7 +5,7 @@ cbuffer LightBuffer : register(b1) {
     float  padding;
 };
 
-Texture2D<float4> gPosition : register(t0);  // 来自几何阶段的纹理
+Texture2D<float4> gPosition : register(t0); 
 Texture2D<float4> gNormal : register(t1);
 Texture2D<float4> gAlbedo : register(t2);
 SamplerState samplerLinear : register(s0);
@@ -15,11 +15,11 @@ float4 PS_Light(float2 TexCoords : TEXCOORD) : SV_Target {
     float3 normal = normalize(gNormal.Sample(samplerLinear, TexCoords).xyz);
     float4 albedo = gAlbedo.Sample(samplerLinear, TexCoords);
 
-    // 光照计算
+    
     float NdotL = saturate(dot(normal, -lightDirection));
     float4 lighting = ambientColor + diffuseColor * NdotL;
 
-    // 最终颜色
+   
     float4 finalColor = lighting * albedo;
     finalColor.a = 1.0f;
 

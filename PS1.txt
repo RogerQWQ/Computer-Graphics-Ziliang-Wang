@@ -1,12 +1,12 @@
-Texture2D tex : register(t0);         // 普通纹理
-Texture2D normalMap : register(t1);  // 法线贴图纹理
+Texture2D tex : register(t0);         
+Texture2D normalMap : register(t1);  
 SamplerState samplerLinear : register(s0);
 
 cbuffer LightBuffer : register(b1)
 {
     float4 ambientColor;
     float4 diffuseColor;
-    float3 lightDirection;  // 光照方向
+    float3 lightDirection;  
     float  padding;
 };
 
@@ -21,37 +21,37 @@ struct PS_INPUT
 
 float4 PS(PS_INPUT input) : SV_Target0
 {
-    // 采样基本纹理颜色
+    
     float4 baseColor = tex.Sample(samplerLinear, input.TexCoords);
 
-    // 对于透明度测试
+  
     if (baseColor.a < 0.5)
     {
         discard;
     }
 
-    // 从法线贴图中读取法线值，转换到[-1, 1] 范围
+
     float3 normalTex = normalMap.Sample(samplerLinear, input.TexCoords) * 2.0f - 1.0f;
 
-    // 计算 TBN 矩阵
+
     float3x3 TBN = float3x3(
         normalize(input.Tangent),
         normalize(input.Binormal),
         normalize(input.Normal)
     );
 
-    // 转换到世界空间的法线方向
+  
     float3 worldNormal = mul(normalTex, TBN);
     worldNormal = normalize(worldNormal);
 
-    // 光照计算
+
     float NdotL = saturate(dot(worldNormal, -lightDirection));
 
-    // Lambert 光照模型：环境光 + 漫反射
+ 
     float4 lighting = ambientColor + diffuseColor * NdotL;
 
-    // 最终颜色计算
+
     float4 finalColor = baseColor;
-    finalColor.a = 1.0f;  // 确保透明度正确
+    finalColor.a = 1.0f;  
     return finalColor;
 }

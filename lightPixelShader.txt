@@ -1,26 +1,26 @@
-Texture2D tex : register(t0);       // 纹理采样器
-SamplerState samp : register(s0);   // 采样器状态
+Texture2D tex : register(t0);     
+SamplerState samp : register(s0);  
 
 cbuffer LightBuffer {
-    float4 LightPosition;  // 光源位置 (世界空间)
-    float4 LightColor;     // 光源颜色和强度
-    float4x4 W;   // 世界矩阵
-    float4x4 VP;  // 相机视图投影矩阵
+    float4 LightPosition;  
+    float4 LightColor;    
+    float4x4 W;   
+    float4x4 VP;  
 };
 
 struct PS_INPUT {
-    float4 Pos : SV_POSITION;  // 裁剪空间位置
-    float3 WorldPos : POSITION; // 世界空间中的位置
-    float3 Normal : NORMAL;    // 世界空间中的法线
-    float2 TexCoords : TEXCOORD; // 纹理坐标
+    float4 Pos : SV_POSITION;  
+    float3 WorldPos : POSITION; 
+    float3 Normal : NORMAL;    
+    float2 TexCoords : TEXCOORD; 
 };
 
 float4 PS(PS_INPUT input) : SV_Target {
     float3 lightDir = normalize(LightPosition.xyz - input.WorldPos);
     float diffuse = max(dot(normalize(input.Normal), lightDir), 0.0f);
 
-    // 设置简单颜色（如红色）
-    float3 baseColor = float3(1.0f, 0.0f, 0.0f);  // 红色
+
+    float3 baseColor = float3(1.0f, 0.0f, 0.0f); 
 
     float3 finalColor = baseColor * LightColor.rgb * diffuse;
     return float4(finalColor, 1.0f);

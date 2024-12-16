@@ -1,14 +1,14 @@
 cbuffer staticMeshBuffer
 {
-    float4x4 W;   // 世界变换矩阵
-    float4x4 VP;  // 视图投影矩阵
+    float4x4 W;   
+    float4x4 VP;  
 };
 
 struct VS_INPUT
 {
     float4 Pos : POS;
     float3 Normal : NORMAL;
-    float4 Tangent : TANGENT;  // Tangent.w 决定旋转方向
+    float4 Tangent : TANGENT;  
     float2 TexCoords : TEXCOORD;
 };
 
@@ -25,22 +25,22 @@ PS_INPUT VS(VS_INPUT input)
 {
     PS_INPUT output;
 
-    // 转换顶点位置到剪辑空间
+  
     output.Pos = mul(input.Pos, W);
     output.Pos = mul(output.Pos, VP);
 
-    // 转换法线和切线到世界空间
+  
     float3 normalWorld = mul(input.Normal, (float3x3)W);
     float3 tangentWorld = mul(input.Tangent.xyz, (float3x3)W);
 
-    // 标准化法线和切线
+   
     output.Normal = normalize(normalWorld);
     output.Tangent = normalize(tangentWorld);
 
-    // 根据切线旋转方向计算副法线
+   
     output.Binormal = normalize(cross(output.Normal, output.Tangent) * input.Tangent.w);
 
-    // 传递纹理坐标
+   
     output.TexCoords = input.TexCoords;
 
     return output;
